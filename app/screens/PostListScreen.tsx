@@ -1,68 +1,64 @@
 import React from "react";
-import { StyleSheet, Pressable, FlatList, Text, View } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../_layout";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-type Props = NativeStackScreenProps<RootStackParamList, "PostList">;
+type BlogStackParamList = {
+  PostList: undefined;
+  PostDetail: { postId: string; title: string; content: string };
+};
 
-const POSTS = [
+const posts = [
   {
-    id: "1",
     title: "React Native is Awesome",
     content:
-      "React Native lets you build mobile apps using only JavaScript. Learn once, write anywhere! This is a fake post used for the exercise.",
+      "React Native lets you build mobile apps using JavaScript and React.",
   },
   {
-    id: "2",
     title: "State Management Tips",
     content:
-      "Managing state can be tricky. Use simple patterns first, then introduce libraries when needed. This is sample content for the exercise.",
+      "Learn how to manage state efficiently in your React Native apps.",
   },
   {
-    id: "3",
     title: "UI Design Principles",
     content:
-      "Good UI is about clarity and consistency. Keep interfaces simple and predictable. More sample content here.",
+      "Good UI design improves user experience and engagement.",
   },
   {
-    id: "4",
-    title: "Optimizing Performance",
+    title: "Navigation in React Native",
     content:
-      "Profile first, then optimize. Use proper list virtualization and avoid unnecessary renders. This is dummy text.",
+      "React Navigation is the go-to library for routing in React Native.",
   },
 ];
 
-export default function PostListScreen({ navigation }: Props) {
-  function renderItem({ item }: { item: (typeof POSTS)[number] }) {
-    return (
-      <>
-        {/* Replace this with your code here for each item to render (Use Pressable Component) */}
-      </>
-    );
-  }
+export default function PostListScreen() {
+  const navigation = useNavigation<
+    NativeStackNavigationProp<BlogStackParamList, "PostList">
+  >();
 
   return (
     <View style={styles.container}>
-      {/* Replace this with your code to render the list of items */}
+      <Text style={styles.header}>Blog Posts</Text>
+      {posts.map((post, idx) => (
+        <View key={idx} style={styles.buttonContainer}>
+          <Button
+            title={post.title}
+            onPress={() =>
+              navigation.navigate("PostDetail", {
+                postId: String(idx + 1),
+                title: post.title,
+                content: post.content,
+              })
+            }
+          />
+        </View>
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  list: {
-    padding: 16,
-  },
-  item: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    backgroundColor: "rgba(0,0,0,0.03)",
-  },
-  itemPressed: {
-    opacity: 0.7,
-  },
+  container: { flex: 1, padding: 16 },
+  header: { fontSize: 24, fontWeight: "bold", marginBottom: 16 },
+  buttonContainer: { marginBottom: 12 },
 });
